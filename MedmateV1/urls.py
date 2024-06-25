@@ -31,6 +31,7 @@ from base.Views.Ocr import *
 from base.Views.doctor import *
 from base.Views.HeartRate import *
 from base.Views.Ecommerce import *
+from base.Views.VideoConf import *
 
 
 
@@ -46,6 +47,7 @@ NotifyUrls = [
     path('edit_notify/<uuid:notification_id>', edit_notification, name='edit_notify'),
     path('notification', notification, name='notification'),
     path("ask", apichatwithbot, name="apichat"), 
+    path("MeetRoom", MeetRoom, name="MeetRoom"), 
 ]
 
 Auth = [

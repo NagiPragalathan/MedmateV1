@@ -1,75 +1,278 @@
-{% extends 'baseindex/index.html' %}
-{% block content %}
-  <!-- End topbar header -->
 
-  <div class="clearfix"></div>
+<!-- End topbar header -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
-  <div class="content-wrapper">
-    <div class="container-fluid">
-      <html>
-        <head>
-          <style>
-            #root {
-              width: 80vw;
-              height: 80vh;
-            }
-          </style>
-        </head>
+<div class="clearfix"></div>
 
-        <body>
-          <div id="root"></div>
-        </body>
-        <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
-        <script>
-          window.onload = function () {
-            function getUrlParams(url) {
-              let urlStr = url.split('?')[1]
-              const urlSearchParams = new URLSearchParams(urlStr)
-              const result = Object.fromEntries(urlSearchParams.entries())
-              return result
-            }
-          
-            // Generate a Token by calling a method.
-            // @param 1: appID
-            // @param 2: serverSecret
-            // @param 3: Room ID
-            // @param 4: User ID
-            // @param 5: Username
-            const roomID = getUrlParams(window.location.href)['roomID'] || Math.floor(Math.random() * 10000) + ''
-            const userID = Math.floor(Math.random() * 10000) + ''
-            const userName = 'userName' + userID
-            const appID = 861817064
-            const serverSecret = '83d612acf3f5e1fdae76cffb33b87802'
-            const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName)
-          
-            const zp = ZegoUIKitPrebuilt.create(kitToken)
-            zp.joinRoom({
-              container: document.querySelector('#root'),
-              sharedLinks: [
-                {
-                  name: 'Personal link',
-                  url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID
-                }
-              ],
-              scenario: {
-                mode: ZegoUIKitPrebuilt.VideoConference
-              },
-          
-              turnOnMicrophoneWhenJoining: true,
-              turnOnCameraWhenJoining: true,
-              showMyCameraToggleButton: true,
-              showMyMicrophoneToggleButton: true,
-              showAudioVideoSettingsButton: true,
-              showScreenSharingButton: true,
-              showTextChat: true,
-              showUserList: true,
-              maxUsers: 2,
-              layout: 'Auto',
-              showLayoutButton: false
-            })
-          }
-        </script>
-      </html>
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <style>
+      #root {
+        width: 100vw;
+        height: 80vh;
+      }
+      #buttons button {
+        background: white;
+        border: none;
+        padding: 10px;
+        border-radius: 7px;          
+      }
+    </style>
+    
+    <div id="root"></div>
+    <div>
+      <div id="buttons" style="margin-top: 19px; background: lightgrey; padding: 18px; border: 2px solid #adadad; display: flex; gap: 10px; justify-content: space-between; align-items: center;">
+        <div>
+          <button onclick="startHeartAnimation()">Heart Rate</button>
+          <button onclick="startTemperatureAnimation()">Temperature</button>
+          <button onclick="startGlucoseAnimation()">Glucose Level</button>
+          <button type="button" onclick="openModal()">Documents</button>
+        </div>
+        <button onclick="close_tab()">Close</button>
+      </div>
+      
+      <div class="container mx-auto mt-10">
+        <!-- Modal background -->
+        <div id="modal-background" class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 hidden"></div>
+        
+        <!-- Modal -->
+        <div id="modal" style="width: 90%; height: 90%; z-index: 999;" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white shadow-md rounded-lg p-8 w-1/2 hidden">
+          <!-- Modal header -->
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold">Popup Title</h3>
+            <button class="text-gray-700 hover:text-gray-900" onclick="closeModal()">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="text-gray-700">
+            {% comment %} <iframe src="{% url 'show_doc' %}" frameborder="0" style="width: 100%; height: 500px; z-index: 999;"></iframe> {% endcomment %}
+            <a href="#" onclick="window.history.back();" class="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back</a>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="heartChart" style="display: none;"></canvas>
+      <canvas id="temperatureChart" style="display: none;"></canvas>
+      <canvas id="glucoseChart" style="display: none;"></canvas>
+      
+      <div id="lastValue" style="padding: 21px; background: #dbdbdb; border: 2px solid #bbbbbb; color: black; font-size: 19px; margin-top: 17px; font-weight: 600;"></div>          
     </div>
   </div>
-{% endblock %}
+</div>
+
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script>
+  window.onload = function () {
+    function getUrlParams(url) {
+      let urlStr = url.split('?')[1];
+      const urlSearchParams = new URLSearchParams(urlStr);
+      const result = Object.fromEntries(urlSearchParams.entries());
+      return result;
+    }
+
+    const roomID = getUrlParams(window.location.href)['roomID'] || Math.floor(Math.random() * 10000) + '';
+    const userID = Math.floor(Math.random() * 10000) + '';
+    const userName = 'userName' + userID;
+    const appID = 1691259861;
+    const serverSecret = 'ca978886fabe676ad89c430ab232a708';
+    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+
+    const zp = ZegoUIKitPrebuilt.create(kitToken);
+    zp.joinRoom({
+      container: document.querySelector('#root'),
+      sharedLinks: [
+        {
+          name: 'Personal link',
+          url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID
+        }
+      ],
+      scenario: {
+        mode: ZegoUIKitPrebuilt.VideoConference
+      },
+      turnOnMicrophoneWhenJoining: true,
+      turnOnCameraWhenJoining: true,
+      showMyCameraToggleButton: true,
+      showMyMicrophoneToggleButton: true,
+      showAudioVideoSettingsButton: true,
+      showScreenSharingButton: true,
+      showTextChat: true,
+      showUserList: true,
+      maxUsers: 2,
+      layout: 'Auto',
+      showLayoutButton: false
+    });
+  }
+
+  function generateHeartRate() {
+    return Math.floor(Math.random() * (90 - 70 + 1)) + 70;
+  }
+
+  function generateBodyTemperature() {
+    return parseFloat(((Math.random() * (98.9 - 97.5)) + 97.5).toFixed(1));
+  }
+
+  function generateGlucoseLevel() {
+    return Math.floor(Math.random() * (150 - 70 + 1)) + 70;
+  }
+
+  const heartCtx = document.getElementById('heartChart').getContext('2d');
+  const heartChart = new Chart(heartCtx, {
+    type: 'line',
+    data: {
+      labels: ['❤️', '❤️', '❤️', '❤️', '❤️'],
+      datasets: [{
+        label: 'Heart Rate',
+        data: [generateHeartRate(), generateHeartRate(), generateHeartRate(), generateHeartRate(), generateHeartRate()],
+        fill: false,
+        borderColor: 'red',
+        borderWidth: 2,
+        tension: 0.5
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false,
+          max: 100,
+          min: 60,
+          ticks: {
+            stepSize: 10
+          }
+        }
+      },
+      animation: {
+        duration: 1000,
+        easing: 'linear'
+      }
+    }
+  });
+
+  const temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
+  const temperatureChart = new Chart(temperatureCtx, {
+    type: 'radar',
+    data: {
+      labels: ['🌡️🔥', '🌡️🔥', '🌡️🔥', '🌡️🔥', '🌡️🔥'],
+      datasets: [{
+        label: 'Temperature',
+        data: [],
+        backgroundColor: 'rgba(255, 0, 0, 0.5)',
+        borderColor: 'red',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      scale: {
+        angleLines: { display: false },
+        ticks: { display: false, suggestedMin: 97.5, suggestedMax: 98.9 }
+      },
+      legend: { display: false }
+    }
+  });
+
+  const glucoseCtx = document.getElementById('glucoseChart').getContext('2d');
+  const glucoseChart = new Chart(glucoseCtx, {
+    type: 'bar',
+    data: {
+      labels: ['1', '2', '3', '4', '5'],
+      datasets: [{
+        label: 'Glucose Level (mg/dL)',
+        data: [generateGlucoseLevel(), generateGlucoseLevel(), generateGlucoseLevel(), generateGlucoseLevel(), generateGlucoseLevel()],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false,
+          ticks: {
+            stepSize: 10
+          }
+        }
+      },
+      animation: {
+        duration: 1000,
+        easing: 'linear'
+      }
+    }
+  });
+
+  let animationTimer;
+
+  function close_tab() {
+    document.getElementById('heartChart').style.display = 'none';
+    document.getElementById('temperatureChart').style.display = 'none';
+    document.getElementById('glucoseChart').style.display = 'none';
+  }
+
+  function startHeartAnimation() {
+    clearInterval(animationTimer);
+    document.getElementById('heartChart').style.display = 'block';
+    document.getElementById('temperatureChart').style.display = 'none';
+    document.getElementById('glucoseChart').style.display = 'none';
+    let timer = setInterval(() => {
+      const newHeartRate = generateHeartRate();
+      heartChart.data.datasets[0].data.push(newHeartRate);
+      if (heartChart.data.datasets[0].data.length > 5) {
+        heartChart.data.datasets[0].data.shift();
+      }
+      heartChart.update();
+    }, 2000);
+
+    animationTimer = setTimeout(() => {
+      clearInterval(timer);
+      const lastValue = heartChart.data.datasets[0].data[4];
+      document.getElementById('lastValue').innerHTML = 'Last Heart Rate: ' + lastValue;
+    }, 5000);
+  }
+
+  function startTemperatureAnimation() {
+    clearInterval(animationTimer);
+    document.getElementById('heartChart').style.display = 'none';
+    document.getElementById('temperatureChart').style.display = 'block';
+    document.getElementById('glucoseChart').style.display = 'none';
+    let timer = setInterval(() => {
+      const temperatures = Array.from({ length: 5 }, generateBodyTemperature);
+      temperatureChart.data.datasets[0].data = temperatures;
+      temperatureChart.update();
+    }, 500);
+
+    animationTimer = setTimeout(() => {
+      clearInterval(timer);
+      const lastValue = temperatureChart.data.datasets[0].data[4];
+      document.getElementById('lastValue').innerHTML = 'Last Temperature: ' + lastValue;
+    }, 5000);
+  }
+
+  function startGlucoseAnimation() {
+    clearInterval(animationTimer);
+    document.getElementById('heartChart').style.display = 'none';
+    document.getElementById('temperatureChart').style.display = 'none';
+    document.getElementById('glucoseChart').style.display = 'block';
+    let timer = setInterval(() => {
+      const newGlucoseLevel = generateGlucoseLevel();
+      glucoseChart.data.datasets[0].data.push(newGlucoseLevel);
+      if (glucoseChart.data.datasets[0].data.length > 5) {
+        glucoseChart.data.datasets[0].data.shift();
+      }
+      glucoseChart.update();
+    }, 2000);
+
+    animationTimer = setTimeout(() => {
+      clearInterval(timer);
+      const lastValue = glucoseChart.data.datasets[0].data[4];
+      document.getElementById('lastValue').innerHTML = 'Last Glucose Level: ' + lastValue;
+    }, 5000);
+  }
+
+  function openModal() {
+    document.getElementById('modal').classList.remove('hidden');
+    document.getElementById('modal-background').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.add('hidden');
+    document.getElementById('modal-background').classList.add('hidden');
+  }
+</script>

@@ -95,7 +95,7 @@ DATABASES = {
        'CLIENT': {
            
            'host': "mongodb+srv://nagi:nagi@cluster0.ohv5gsc.mongodb.net/",
-           'name':'MedMateV1',
+           'name':'MedmateV1',
            'authMechanism': "SCRAM-SHA-1",
         }
    }

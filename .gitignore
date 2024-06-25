@@ -1,0 +1,94 @@
+# Django specific
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# If using migrations
+*/migrations/*
+
+# Python virtual environment
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+.env/
+*.env
+
+# Python package files
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VSCode settings
+.vscode/
+
+# PyCharm settings
+.idea/
+
+# macOS specific
+.DS_Store
+
+# Node modules (if using Node.js)
+node_modules/
+
+# MongoDB logs
+*.log
+*.bak
+
+# GridFS files
+*.pdf
+
+# Ignore the local settings file
+settings_local.py
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore build files
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# Ignore logs and temp files
+logs/
+*.log
+*.out
+*.err
+tmp/
+*.tmp
+
+# Ignore pip file
+pip-log.txt
+
+# Ignore static files
+staticfiles/
+
+# Ignore media files
+media/
+uploads/

@@ -1,0 +1,311 @@
+{% extends 'baseindex/index.html' %}
+{% block content %}
+  
+        <!-- End topbar header -->
+
+        <div class="clearfix"></div>
+
+        <div class="content-wrapper">
+          <div class="container-fluid">
+            <div class="row mt-3">
+              <div class="col-lg-4">
+                <div class="card profile-card-2">
+                  <div class="card-img-block">
+                    <div class="card-img-block">
+                      {% if user_data.background_image %}
+                          <img class="img-fluid" src="{{ user_data.background_image}}" alt="Card image cap" />
+                      {% else %}
+                          <img class="img-fluid" src="https://via.placeholder.com/800x500" alt="Card image cap" />
+                      {% endif %}
+                  </div>
+                  
+                  </div>
+               
+
+                  <div class="card-body pt-5">
+                    {{ user_data.change_profile }}
+                    {% if user_data.change_profile %}
+                    <img src="{{ user_data.change_profile }}" alt="profile-image" class="profile" />
+                {% else %}
+                    <img src="https://via.placeholder.com/110x110" alt="profile-image" class="profile" />
+                {% endif %}
+                    <h5 class="card-title">{{user_data.username}}</h5>
+                    <p class="card-text">{{user_data.biography}}</p>
+                    <div class="icon-block">
+                      <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
+                      <a href="javascript:void();"><i class="fa fa-twitter bg-twitter text-white"></i></a>
+                      <a href="javascript:void();"><i class="fa fa-google-plus bg-google-plus text-white"></i></a>
+                    </div>
+                  </div>
+
+                  <div class="card-body border-top border-light">
+                    <div class="media align-items-center">
+                      <div>
+                        <img src="assets/images/timeline/html5.svg" class="skill-img" alt="skill img" />
+                      </div>
+                      <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                          <p>
+                            HTML5 <span class="float-right">65%</span>
+                          </p>
+                          <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" style="width:65%"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="media align-items-center">
+                      <div>
+                        <img src="assets/images/timeline/bootstrap-4.svg" class="skill-img" alt="skill img" />
+                      </div>
+                      <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                          <p>
+                            Bootstrap 4 <span class="float-right">50%</span>
+                          </p>
+                          <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" style="width:50%"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="media align-items-center">
+                      <div>
+                        <img src="assets/images/timeline/angular-icon.svg" class="skill-img" alt="skill img" />
+                      </div>
+                      <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                          <p>
+                            AngularJS <span class="float-right">70%</span>
+                          </p>
+                          <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" style="width:70%"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="media align-items-center">
+                      <div>
+                        <img src="assets/images/timeline/react.svg" class="skill-img" alt="skill img" />
+                      </div>
+                      <div class="media-body text-left ml-3">
+                        <div class="progress-wrapper">
+                          <p>
+                            React JS <span class="float-right">35%</span>
+                          </p>
+                          <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" style="width:35%"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-8">
+                <div class="card">
+                  <div class="card-body">
+                    <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
+                      <li class="nav-item">
+                        <a href="javascript:void();" data-target="#profile" data-toggle="pill" class="nav-link active"><i class="icon-user"></i> <span class="hidden-xs">Profile</span></a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Messages</span></a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link"><i class="icon-note"></i> <span class="hidden-xs">Edit</span></a>
+                      </li>
+                    </ul>
+                    <div class="tab-content p-3">
+                      <div class="tab-pane active" id="profile">
+                        <h5 class="mb-3">User Profile</h5>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h6>Bio</h6>
+                            <p>{{user_data.biography}} </p>
+                            <h6>FIRST NAME :{{user_data.firstname}}</h6>
+                            <h6>LAST NAME :{{user_data.lastname}}</h6>
+                            <h6>EMAIL :{{user_data.email}}</h6>
+                            <h6>EXPERIENCE :{{user_data.experience}}</h6>
+                           
+                            
+                          </div>
+                          <div class="col-md-6">
+                            <h6>ADDRESS</h6>
+                            <a href="javascript:void();" >{{user_data.address_state}}</a>
+                            <a href="javascript:void();" >{{user_data.address_city}}</a>
+                            <a href="javascript:void();" >{{user_data.address_street}}</a>
+                            {% comment %} <a href="javascript:void();" class="badge badge-dark badge-pill">angularjs</a> {% endcomment %}
+                            
+                            <hr />
+                            <span class="badge badge-primary"><i class="fa fa-user"></i> 900 Followers</span>
+                            <span class="badge badge-success"><i class="fa fa-cog"></i> 43 Forks</span>
+                            <span class="badge badge-danger"><i class="fa fa-eye"></i> 245 Views</span>
+                          </div>
+                          <div class="col-md-12">
+                            <h5 class="mt-2 mb-3"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h5>
+                            <div class="table-responsive">
+                              <table class="table table-hover table-striped">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <strong>Abby</strong> joined ACME Project Team in <strong>`Collaboration`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>Gary</strong> deleted My Board1 in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>Kensington</strong> deleted MyBoard3 in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>John</strong> deleted My Board1 in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      <strong>Skell</strong> deleted his post Look at Why this is.. in <strong>`Discussions`</strong>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /row -->
+                      </div>
+                      <div class="tab-pane" id="messages">
+                        <div class="alert alert-info alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <div class="alert-icon">
+                            <i class="icon-info"></i>
+                          </div>
+                          <div class="alert-message">
+                            <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
+                          </div>
+                        </div>
+                        <div class="table-responsive">
+                          <table class="table table-hover table-striped">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="tab-pane" id="edit">
+                        <form method="post" action="/create_or_update_user_profile">
+                          {% csrf_token %}
+                          <div class="form-group row">
+                            <label  for="firstname" class="col-lg-3 col-form-label form-control-label">First name</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="text" id="firstname" name="firstname" value="{{user_data.firstname}}" required />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="lastname" class="col-lg-3 col-form-label form-control-label">Last name</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="text" d="lastname" name="lastname" value="{{user_data.lastname}}" required/>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="email" class="col-lg-3 col-form-label form-control-label">Email</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="email" id="email" name="email" value="{{user_data.email}}"  required />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="change_profile" class="col-lg-3 col-form-label form-control-label">Change profile</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="file" id="change_profile" name="change_profile" accept="image/*" value="{{user_data.change_profile}}"   required/>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="background_image" class="col-lg-3 col-form-label form-control-label">Change Background profile</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="file" id="background_image" name="background_image" value="{{user_data.background_image}}"  accept="image/*" required/>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                          <label class="col-lg-3 col-form-label form-control-label" for="experience">Experience:</label>
+                          <div class="col-lg-9">
+                             <input type="text" id="experience" name="experience"  value="{{user_data.experience}}" ><br><br>
+                            </div>
+                          </div>
+                          
+                          <div class="form-group row">
+                            <label for="address_street" class="col-lg-3 col-form-label form-control-label">Address</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="text" id="address_street" name="address_street" value="{{user_data.address_street}}"   placeholder="Street" />
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label  class="col-lg-3 col-form-label form-control-label"></label>
+                            <div class="col-lg-6">
+                              <input class="form-control" type="text"  id="address_city" name="address_city" placeholder="City" value="{{user_data.address_city}}"  />
+                            </div>
+                            <div class="col-lg-3">
+                              <input class="form-control" type="text" id="address_state" name="address_state"placeholder="State" value="{{user_data.address_state}}" />
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label for="username" class="col-lg-3 col-form-label form-control-label">Username</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="text" id="username" name="username" required value="{{user_data.username}}"  />
+                            </div>
+                          <div class="form-group row">
+                            <label for="biography" class="col-lg-3 col-form-label form-control-label">User Bio</label>
+                            <div class="col-lg-9">
+                              <input class="form-control" type="text" id="biography" name="biography"  value="{{user_data.biography}}" />
+                            </div>
+                          </div>
+                         
+                          <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label"></label>
+                            <div class="col-lg-9">
+                              <input type="reset" class="btn btn-secondary" value="Cancel" />
+                              <input type="submit" class="btn btn-primary" value="Save Changes" />
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+{% endblock %}

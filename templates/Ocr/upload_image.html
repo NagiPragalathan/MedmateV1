@@ -1,0 +1,205 @@
+{% extends 'baseindex/index.html' %}
+{% block content %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin: 20px;
+        }
+
+        p{
+            color:black;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            display: none; /* Hide the default file input */
+        }
+
+        .file-label {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        .file-display-area {
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .documents-list {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .document-item {
+            margin-bottom: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .document-item h3 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .document-item p, .document-item pre {
+            margin: 0 0 10px;
+        }
+
+        .document-item pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .document-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .document-item a:hover {
+            text-decoration: underline;
+        }
+
+        .document-item .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .document-item .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .file-label, .delete-btn {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .file-label {
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .document-item {
+                padding: 10px;
+            }
+
+            .document-item h3 {
+                font-size: 16px;
+            }
+
+            .document-item p, .document-item pre {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload PDF</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="fileInput" class="file-label">Select PDF File</label>
+            <input type="file" name="pdf" id="fileInput" accept="application/pdf">
+            <div class="file-display-area" id="fileDisplayArea">No file selected</div>
+            <button type="submit" class="file-label">Upload</button>
+        </form>
+
+        <div class="documents-list">
+            <h2>Uploaded Documents</h2>
+            {% for document in documents %}
+            <div class="document-item">
+                <h3>Document ID: {{ document.id }}</h3>
+                <p><strong>User:</strong> {{ document.user.username }}</p>
+                <p><strong>Summary:</strong> {{ document.summary }}</p>
+                <pre><strong>Extracted Text:</strong> {{ document.file_content }}</pre>
+                <p><strong>Last Updated:</strong> {{ document.last_updated_file }}</p>
+                <a href="{% url 'download_file' document.id %}">Download File</a>
+                <form method="post" action="{% url 'delete_file' document.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileDisplayArea = document.getElementById('fileDisplayArea');
+
+        fileInput.addEventListener('change', () => {
+            const files = fileInput.files;
+            displayFiles(files);
+        });
+
+        function displayFiles(files) {
+            if (files.length) {
+                fileDisplayArea.textContent = files[0].name;
+            } else {
+                fileDisplayArea.textContent = 'No file selected';
+            }
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

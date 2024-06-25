@@ -1,8 +1,9 @@
 # views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from base.models import UserRole
+from base.models import UserRole, PatientDocument
 from django.contrib.auth import authenticate, login
+import g4f
 
 def login_view(request):
     if request.method == 'POST':
@@ -87,12 +88,24 @@ def apichatwithbot(request):
             """
             print(system)
 
+            user_details = [
+                    {"role": "system", "content":system},
+                    
+                ]
+            
+            obj = PatientDocument.objects.all()
+            
+            for i in obj:
+                user_details.append({"role": "user", "content": """Memerize this you should give me the answer if i ask question sometime after [Content]: """+i.summary})
+            
+            user_details.append({"role": "user", "content": user})
+            
+            print(user_details)
+            
             # Create a chat completion with the user's query
             chat_completion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {"system": system, "role": "user", "content": user}
-                ]
+                messages=user_details
             )
 
             # Get the AI's response

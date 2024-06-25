@@ -15,7 +15,7 @@ def extract_text(request):
         pdf_file = request.FILES['pdf']
         
         client = MongoClient('mongodb+srv://nagi:nagi@cluster0.ohv5gsc.mongodb.net/')  # Use your MongoDB connection string
-        db = client['MedmateV1']
+        db = client['ASD']
         fs = GridFS(db)
         
         file_id = fs.put(pdf_file.read(), filename=pdf_file.name)
@@ -48,7 +48,7 @@ def download_file(request, document_id):
     document = get_object_or_404(PatientDocument, id=document_id, user=request.user)
     
     client = MongoClient('mongodb+srv://nagi:nagi@cluster0.ohv5gsc.mongodb.net/')  # Use your MongoDB connection string
-    db = client['MedmateV1']
+    db = client['ASD']
     fs = GridFS(db)
     
     grid_fs_file = fs.get(ObjectId(document.file_gridfs_id))
@@ -63,7 +63,7 @@ def delete_file(request, document_id):
     document = get_object_or_404(PatientDocument, id=document_id, user=request.user)
     
     client = MongoClient('mongodb+srv://nagi:nagi@cluster0.ohv5gsc.mongodb.net/')  # Use your MongoDB connection string
-    db = client['MedmateV1']
+    db = client['ASD']
     fs = GridFS(db)
     
     fs.delete(ObjectId(document.file_gridfs_id))
@@ -74,11 +74,20 @@ def delete_file(request, document_id):
 
 def generate_summary(text):
     client = Client()
+    user_content = f"""
+        Note:
+        1. Give me the summary of the following content.
+        2. The Summary should be in language of english
+        3. dont use japanese.
+        4. The summary should be in 1-5 lines.
+        Text:
+        {text}
+    """
     chat_completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a useful AI to provide the summary of the given content in English."},
-            {"role": "user", "content": f"Give me the summary of the following content: '''{text}'''."}
+            {"role": "user", "content": user_content}
         ]
     )
     ai_response = chat_completion.choices[0].message.content or ""

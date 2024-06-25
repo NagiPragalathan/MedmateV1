@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -44,9 +44,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://*',
 ]
 
-
 SECURE_SSL_REDIRECT = False
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -78,29 +76,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "MedmateV1.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 DATABASES = {
    'default': {
        'ENGINE': 'djongo',
+       'NAME': 'ASD',  # Ensure this matches the exact case
        'CLIENT': {
-           
-           'host': "mongodb+srv://nagi:nagi@cluster0.ohv5gsc.mongodb.net/",
-           'name':'MedmateV1',
+           'host': "mongodb+srv://nagi:nagi@cluster0.ohv5gsc.mongodb.net/MedmateV1",
            'authMechanism': "SCRAM-SHA-1",
-        }
+       }
    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -120,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -132,37 +119,26 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-import os
-
 STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (
-                        'static',
-                        'media',
-                   )
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MedmateV1.settings')
-
+# Celery configuration
 CELERY_TIMEZONE = "Australia/Tasmania"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_CACHE_BACKEND = 'default'
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-
-
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = 'sitejec@gmail.com'  # TODO: Your email
 EMAIL_HOST = 'smtp.gmail.com'
@@ -170,5 +146,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'lgnl ypby ondq hgmo'  # TODO: Give APP Password here
 EMAIL_USE_TLS = True
 
-
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

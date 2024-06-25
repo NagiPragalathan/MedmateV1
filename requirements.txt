@@ -4,6 +4,7 @@ django==4.1.9
 pytz==2023.3
 pytz-deprecation-shim==0.1.0.post0
 django
+pyserial
 
 pymongo[srv]
 g4f

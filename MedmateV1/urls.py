@@ -45,6 +45,7 @@ NotifyUrls = [
     path('delete_notify/<uuid:notification_id>', delete_notification, name='delete_notify'),
     path('edit_notify/<uuid:notification_id>', edit_notification, name='edit_notify'),
     path('notification', notification, name='notification'),
+    path("ask", apichatwithbot, name="apichat"), 
 ]
 
 Auth = [

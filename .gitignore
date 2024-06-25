@@ -4,7 +4,6 @@
 *.pyc
 __pycache__/
 db.sqlite3
-media/
 
 # If using migrations
 */migrations/*
@@ -85,10 +84,3 @@ tmp/
 
 # Ignore pip file
 pip-log.txt
-
-# Ignore static files
-staticfiles/
-
-# Ignore media files
-media/
-uploads/
